@@ -1,36 +1,57 @@
-#CS2640 Eric Chen
-#Program 1: Getting Familiar with Assembly - 10/25/2022
 #Objective: Take user input and do arithmetic operations
+#CS2640 Eric Chen
+#Program 1: Getting Familiar with Assembly
+#Date - 10/25/2022
+#Github https://github.com/eschencpp/MIPSArithmetic
 .data
 intInput: .asciiz "Enter an integer: "
-options: .asciiz "Please select an option: \n1. Addition \n2. Subtraction \n3. Multiplication \n4. Division\n"
+displayInput: .asciiz "\nYour input is: "
+options: .asciiz "\nPlease select an option: \n1. Addition \n2. Subtraction \n3. Multiplication \n4. Division\n"
 addMsg: .asciiz "The result for addition is: "
 subMsg: .asciiz "The result for subtraction is: "
 multMsg: .asciiz "The result for multiplication is: "
 divMsg: .asciiz "The result for division is: "
+sameInp: .asciiz "\nThe inputs are the same."
+diffInp: .asciiz "\nThe inputs are different."
 .text
 main: 
-	li $v0, 4
+	#Task 1: Taking user inputs
+	li $v0, 4	#Prompt user for input in console
 	la $a0,intInput
 	syscall
-	li $v0, 5 #Take user input int
+	li $v0, 5 	#Take user input int
 	syscall
-	move $s0, $v0 #Store input variable 
+	move $s0, $v0 	#Store input variable to $s0
 	
-	li $v0, 4
+	li $v0, 4	#Prompt user for input in console
 	la $a0,intInput
 	syscall
-	li $v0, 5 #Take user input int
+	li $v0, 5 	#Take user input int
 	syscall
-	move $s1, $v0 #Store input variable 
+	move $s1, $v0 	#Store input variable  to $s1
 	
+	li $v0, 4	#Display input 1 to user
+	la $a0,displayInput
+	syscall
+	li $v0, 1  	
+	move $a0,$s0
+	syscall
+	
+	li $v0, 4	#Display input 2 to user
+	la $a0,displayInput
+	syscall
+	li $v0, 1  	
+	move $a0,$s1
+	syscall
+	
+	#Task 2: Arithmetic operation options
 	li $v0, 4
 	la $a0,options
 	syscall
 	
-	li $v0, 5 #Take user input 
+	li $v0, 5 	#Take user input 
 	syscall
-	la $s2, ($v0) #Store input variable into var
+	la $s2, ($v0) 	#Store input variable into var
 	
 	#If statements to check option input
 	beq $s2, 1, addition
@@ -38,8 +59,13 @@ main:
 	beq $s2, 3, multi
 	beq $s2, 4, divi
 	
-	li $v0, 10 #Exit Program
-	syscall 
+	#Task 3: Loops
+resume:
+	beq $s0, $s1, eqInput
+	bne $s0, $s1, notEqInput
+	
+	
+	j exit
 	
 addition:
 	li $v0, 4
@@ -50,9 +76,9 @@ addition:
 	li $v0, 1
 	move $a0, $t0
 	syscall
+	 
+	j resume
 	
-	li $v0, 10 #10 is value to exit program
-	syscall #make service call
 subtract:
 	li $v0, 4
 	la $a0,subMsg
@@ -63,8 +89,9 @@ subtract:
 	move $a0, $t0
 	syscall
 	
-	li $v0, 10 #10 is value to exit program
-	syscall #make service call
+	j resume
+	
+	
 multi:	
 	li $v0, 4
 	la $a0,multMsg
@@ -73,9 +100,9 @@ multi:
 	li $v0, 1
 	move $a0, $t0
 	syscall
+	j resume
 	
-	li $v0, 10 #10 is value to exit program
-	syscall #make service call
+	
 divi:
 	li $v0, 4
 	la $a0,divMsg
@@ -90,9 +117,23 @@ divi:
 	li $v0, 2
 	syscall
 	
-	li $v0, 10 #10 is value to exit program
-	syscall #make service call
+	j resume
 	
 	
+
+eqInput:
+	li $v0, 4
+	la $a0, sameInp
+	syscall
 	
+	j exit
+
+notEqInput:
+	li $v0, 4
+	la $a0, diffInp
+	syscall
+	
+exit:
+	li $v0, 10 	#Exit Program
+	syscall 
 	
