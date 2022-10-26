@@ -7,7 +7,7 @@
 .data
 intInput: .asciiz "Enter an integer: "
 displayInput: .asciiz "\nYour input is: "
-options: .asciiz "\nPlease select an option: \n1. Addition \n2. Subtraction \n3. Multiplication \n4. Division\n"
+options: .asciiz "\nPlease select an option: (1-4) \n1. Addition \n2. Subtraction \n3. Multiplication \n4. Division\n"
 addMsg: .asciiz "The result for addition is: "
 subMsg: .asciiz "The result for subtraction is: "
 multMsg: .asciiz "The result for multiplication is: "
@@ -54,7 +54,7 @@ main:
 	syscall
 	la $s2, ($v0) 	#Store input variable into var
 	
-	#If statements to check option input
+	#If statements to check option input (Available options 1-4)
 	beq $s2, 1, addition
 	beq $s2, 2, subtract
 	beq $s2, 3, multi
